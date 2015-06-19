@@ -2,7 +2,7 @@
 
 The *run_analysis.R* script containes the *run_analysis()* function that reads in the data and writes back a tidy data set. It has to be run in the directory containing the *UCI HAR Dataset* data directory. It uses the *dplyr* library package.
 Following steps are performed:
-  - read the *features.txt* data table and filter all variables containing *mean* or *std*.
+  - read the *features.txt* data table and filter all variables containing *mean()* or *std()*.
   - read the *activity_labels.txt* vector.
   - for the *test* and *train* data read the *x*, *y* and *subject* data and perform following substeps:
       - read *y* data and replace label indices by label names
