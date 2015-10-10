@@ -1,0 +1,59 @@
+---
+title: "Statistical Inference Course Project"
+author: "monade"
+date: "12 Sep 2015"
+output: pdf_document
+---
+
+### Overview
+This investigates a simulation taken from an exponential distribution and interferes some properties from the simulated data. These properties are compared with the theoretical values.
+
+### Simulations
+
+Draw a sample taken from averages of an exponential distribution
+```{r}
+set.seed( 37 )
+lambda <- 0.2
+N      <- 1000
+D      <- 40
+sample <- replicate( N, mean( rexp( D, lambda)))
+```
+
+Evaluate sample mean/variance and theoretical mean/variance
+```{r}
+m    <- mean( sample )
+var  <- sum( (sample-m)^2)/(N-1) 
+stddev <- sqrt( var )
+tm   <- 1/lambda
+tvar <- (1/lambda)^2/D
+tstddev <- sqrt(tvar)
+```
+
+Plot histogram
+```{r}
+hist( sample, freq=F, ylim=c(0,0.8), breaks=20,
+      main="Histogram with sample and theo means and standard deviation")
+lines( seq(3, 8, 0.1), dnorm(seq(3, 8, 0.1), tm, tvar), col="Green")
+abline(v=c(m-stddev, m, m+stddev), col="Red")
+text(7,0.5,"sample mean+-stddev", col="Red")
+abline(v=c(tm-tstddev, tm, tm+tstddev), col="Blue")
+text(7,0.45,"theo mean+-?stddev", col="Blue")
+text(7, 0.4, "normal distribution", col="Green")
+```
+
+Sample mean and variance
+```{r}
+c( m, var)
+```
+
+Theoretical mean and variance
+```{r}
+c( tm, tvar)
+```
+
+Relative differences
+```{r}
+c((m-tm)/tm,(var-tvar)/tvar)
+```
+
+The mean of the exponential distributions resembles the theoretical limit distribution, which is a normal distribution.

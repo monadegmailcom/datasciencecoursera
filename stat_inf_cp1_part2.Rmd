@@ -1,0 +1,46 @@
+---
+title: "Statistical Inference Course Project Tooth Growth"
+author: "monade"
+date: "26 Sep 2015"
+output: pdf_document
+---
+
+Load Tooth Growth data
+```{r, warning=FALSE, message=F}
+library(dplyr)
+data( ToothGrowth )
+tg <- ToothGrowth
+```
+
+Summarize data by groups
+```{r}
+tg_group <- group_by( tg, supp, dose)
+len_means <- summarize( tg_group, mean = mean(len))
+len_means
+```
+
+Plot of Tooth Growth length on Vitamin C delivery by Orange Juice and Ascorbic Acid
+```{r}
+len_vc <- len_means$mean[1:3]
+len_oj <- len_means$mean[4:6]
+m <- matrix(c(len_vc, len_oj), ncol=3, byrow=TRUE)
+barplot(m, beside=TRUE, names=len_means$dose[1:3], main="Tooth Growth on Vitamin C delivery by Orange Juice and Ascorbic Acid")
+```
+
+The mean of the tooth growth are higher for doses 0.5 and 1 with Orange Juice delivery
+
+One sided t tests for each dose delivery
+```{r}
+test_length_by_dose = function( d )
+{
+  vc <- filter(tg_group, supp=="VC", dose==d)$len
+  oj <- filter(tg_group, supp=="OJ", dose==d)$len
+  t.test(oj, vc, alternative="greater")
+}
+
+test_length_by_dose( 0.5 )
+test_length_by_dose( 1 )
+test_length_by_dose( 2 )
+```
+
+The p values for the doses 0.5 an 1 are sufficient small for an indication of a greater tooth growth length by delivery with Orange Juice. For doses 2 there is no indication.
